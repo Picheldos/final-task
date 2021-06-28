@@ -1,37 +1,29 @@
-import React, {useState} from "react";
-import { useForm, SubmitHandler } from "react-hook-form";
-import LoginForm from "../LoginForm/LoginForm";
+import React from "react";
+import { useHistory } from 'react-router-dom';
 
-interface ILogin {
-    login: string;
-    password: string;
-    rememberPassword: boolean;
-}
+import {userLogin} from "../LoginForm/LoginForm";
+
+import { Container, Hello, HelloName, Logout } from "./Profile.styled";
+
 
 const Profile: React.FC  = () => {
-    const { handleSubmit, register, formState: { errors } } = useForm<ILogin>();
-
-    const adminUser = {
-        email: "admin@admin.com",
-        password: "admin123",
-    };
-
-    const [user, setUser] = useState({name: "", email: ""});
-    const [error, setError] = useState("");
-
-    const Login = (details: any) => {
-        console.log(details);
-    };
-
-    const Logout = () => {
-        console.log("Logout")
-    };
-
+    const history = useHistory()
+    const isLogin = () => {
+        userLogin === '' ? history.push('/') : console.log('');
+    }
+    isLogin()
     return (
-        <LoginForm />
-    )
+        <Container>
+            <HelloName>
+                <Hello>Здравствуйте,</Hello>
+                <h1>{userLogin}</h1>
+            </HelloName>
+            <Logout onClick={() => {history.push('/')}}>Выйти</Logout>
 
-}
+        </Container>
+    );
+
+};
 
 export default Profile
 

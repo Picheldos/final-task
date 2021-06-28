@@ -1,5 +1,8 @@
-import React, {useEffect, useState} from "react";
+import React, { useState } from "react";
 import { useForm, SubmitHandler } from "react-hook-form";
+import { useHistory } from 'react-router-dom';
+
+import {Container, Input, Button, Error, Mark, LabelMark, InputError} from "./LoginForm.styled";
 
 import {User} from "../../api/form";
 
@@ -8,49 +11,72 @@ interface ILogin {
     password: string;
     rememberPassword: boolean;
 }
-
+export let userLogin = '';
 
 const LoginForm: React.FC = () => {
-    const { handleSubmit, register } = useForm<ILogin>()
+    const { handleSubmit, register, formState: { errors } } = useForm<ILogin>()
     const [error, setError] = useState("");
+    const [disable, setDisable] = React.useState(false);
+    const history = useHistory()
 
     const onSubmit: SubmitHandler<ILogin> = async (user) => {
 
-        const loginSucces = () => {console.log('login is success')}
-        const loginDenied = () => {setError('Wrong login or password')}
+        const loginSuccess = () => {
+            userLogin = userData.login;
+            history.push('/user')
+        }
+        const LoginIsWrong = () => {
+            setError('Пользователя ' + userData.login + ' не существует');
+            setDisable(false);
+        }
+        const PasswordIsWrong = () => {
+            setError('Пароль введен неверно');
+            setDisable(false);
+        }
         const userData = {
             ...user,
         };
-        console.log(userData)
+
         if (userData.login === User.login && userData.password === User.password) {
+            setDisable(true);
             setTimeout(
-                loginSucces, 1000
+                loginSuccess, 1000
             );
 
-        } else {
+        } else if (userData.login !== User.login) {
+            setDisable(true);
             setTimeout(
-                loginDenied, 1000
-
-            )
+                LoginIsWrong, 1000
+            );
+        } else {
+            setDisable(true);
+            setTimeout(
+                PasswordIsWrong, 1000
+            );
         }
 
     }
 
     return (
-        <form onSubmit={handleSubmit(onSubmit)}>
-            {(error !== "") ? ( <div>{error}</div> ) : ""}
+        <Container onSubmit={handleSubmit(onSubmit)}>
+            {(error !== "") ? ( <Error>{error}</Error> ) : ""}
             <label>Логин</label>
-            <input placeholder={'Логин'} {...register('login', {
+            <Input placeholder={'Логин'} inputError={!!errors.login?.message} {...register('login', {
                 required: 'Обязательное поле'
             })}/>
+            {errors.login?.message && <InputError>{errors.login.message}</InputError>}
             <label>Пароль</label>
-            <input placeholder={'Пароль'} type={'password'} {...register('password', {
+            <Input placeholder={'Пароль'} type={'password'} inputError={!!errors.password?.message} {...register('password', {
                 required: 'Обязательное поле'
             })}/>
-            <input type={'checkbox'} {...register('rememberPassword')}/>
-            <label>Запомнить меня</label>
-            <button>Войти</button>
-        </form>
+            {errors.password?.message && <InputError>{errors.password.message}</InputError>}
+            <Mark>
+                <Input type={'checkbox'} {...register('rememberPassword')}/>
+                <LabelMark>Запомнить пароль</LabelMark>
+            </Mark>
+
+            <Button disabled={disable}>Войти</Button>
+        </Container>
     );
 };
 
