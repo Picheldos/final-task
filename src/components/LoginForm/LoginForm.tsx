@@ -2,16 +2,17 @@ import React, { useState } from "react";
 import { useForm, SubmitHandler } from "react-hook-form";
 import { useHistory } from 'react-router-dom';
 
-import {Container, Input, Button, Error, Mark, LabelMark, InputError} from "./LoginForm.styled";
 
-import {User} from "../../api/form";
+import {Container, Input, Button, Error, Mark, LabelMark, InputError, Title} from "./LoginForm.styled";
+import {User, cookieLogin, createCookie} from "../../api/form";
 
 interface ILogin {
     login: string;
     password: string;
     rememberPassword: boolean;
 }
-export let userLogin = '';
+
+export let userLogin:string;
 
 const LoginForm: React.FC = () => {
     const { handleSubmit, register, formState: { errors } } = useForm<ILogin>()
@@ -22,8 +23,8 @@ const LoginForm: React.FC = () => {
     const onSubmit: SubmitHandler<ILogin> = async (user) => {
 
         const loginSuccess = () => {
-            userLogin = userData.login;
-            history.push('/user')
+
+            history.push('/profile');
         }
         const LoginIsWrong = () => {
             setError('Пользователя ' + userData.login + ' не существует');
@@ -39,6 +40,7 @@ const LoginForm: React.FC = () => {
 
         if (userData.login === User.login && userData.password === User.password) {
             setDisable(true);
+            createCookie(userData.login, userData.password);
             setTimeout(
                 loginSuccess, 1000
             );
@@ -54,11 +56,12 @@ const LoginForm: React.FC = () => {
                 PasswordIsWrong, 1000
             );
         }
-
+        console.log(userData);
     }
 
     return (
         <Container onSubmit={handleSubmit(onSubmit)}>
+            <Title>ONLY.</Title>
             {(error !== "") ? ( <Error>{error}</Error> ) : ""}
             <label>Логин</label>
             <Input placeholder={'Логин'} inputError={!!errors.login?.message} {...register('login', {

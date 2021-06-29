@@ -5,9 +5,7 @@ interface IInput {
 }
 
 export const Container = styled.form`
-  position: absolute;
-  top: 30%;
-  left: 35%;
+  margin: 0 auto;
 
   display: flex;
   flex-direction: column;
@@ -26,6 +24,9 @@ export const Input = styled.input<IInput>`
   border-radius: 5px;
   margin-top: 5px;
   margin-bottom: 5px;
+  &:focus {
+    outline: none;
+  }
   
 `;
 
@@ -52,6 +53,13 @@ export const Button = styled.button`
       cursor: default;
     }
   }
+`;
+
+export const Title = styled.h1`
+  margin: 0 auto;
+  margin-bottom: 250px;
+  font-size: 64px;
+  line-height: 78px;
 `;
 
 export const Error = styled.div`

@@ -1,11 +1,12 @@
 import React from "react";
-
-import LoginForm from "../components/LoginForm/LoginForm";
+import { useHistory } from 'react-router-dom'
 
 const Index = () => {
+    const history = useHistory()
+    history.push('/login')
     return (
         <div>
-            <LoginForm />
+
         </div>
     )
 }

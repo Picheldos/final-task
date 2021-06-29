@@ -8,10 +8,11 @@ import {
 import { ThemeProvider } from "styled-components";
 
 import Index from "../../pages/Index";
-import User from "../../pages/User";
+import Profile from "../../pages/Profile";
 
 import { GlobalStyles } from "../../styles/globalStyles";
 import theme from '../../styles/theme'
+import Login from "../../pages/Login";
 
 const App: React.FC = () => {
     return (
@@ -19,8 +20,11 @@ const App: React.FC = () => {
             <GlobalStyles />
             <Router>
                 <Switch>
-                    <Route path={'/user'}>
-                        <User />
+                    <Route path={'/login'}>
+                        <Login />
+                    </Route>
+                    <Route path={'/profile'}>
+                        <Profile />
                     </Route>
                     <Route exact={true} path={'/'}>
                         <Index />
